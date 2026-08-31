@@ -1,0 +1,10 @@
+name = "projeto-encurtador-cloud"
+main = "js/index.js"
+compatibility_date = "2026-08-31"
+
+[[kv_namespaces]]
+binding = "LINKS"
+id = "cba293d6afd44951b728f42ded72d3f4"
+
+[observability]
+enabled = true
