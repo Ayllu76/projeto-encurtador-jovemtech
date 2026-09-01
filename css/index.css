@@ -1,0 +1,176 @@
+/* Variáveis para consistência de cores e design */
+:root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --success: #16a34a;
+    --bg-global: #f8fafc;
+    --bg-card: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-global);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background-color: var(--bg-card);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 540px;
+}
+
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+/* Layout do Formulário */
+.form-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+input[type="url"] {
+    flex: 1;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="url"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+button {
+    padding: 14px 24px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Caixa de Resultado */
+.result-box {
+    position: relative;
+    background-color: #f1f5f9;
+    border: 1px dashed var(--primary);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.result-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#shortUrlText {
+    font-weight: 600;
+    color: var(--primary);
+    word-break: break-all;
+}
+
+.btn-copy {
+    background-color: var(--success);
+    padding: 8px 16px;
+    font-size: 0.875rem;
+}
+
+.btn-copy:hover {
+    background-color: #15803d;
+}
+
+/* Toast de feedback */
+.toast {
+    position: absolute;
+    top: -35px;
+    right: 16px;
+    background: #334155;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+/* Histórico */
+.history-section {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+.history-section h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: var(--text-main);
+}
+
+.history-list {
+    list-style: none;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.history-item a {
+    color: var(--text-muted);
+    text-decoration: none;
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-item span {
+    font-weight: 600;
+}
+
+/* Classes utilitárias */
+.hidden {
+    display: none !important;
+}
