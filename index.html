@@ -3,11 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Encurtador de links</title>
+    <title>Encurtador de Links - Portfólio</title>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    Hello World!
-    
+
+    <main class="container">
+        <h1>Cortador de Links</h1>
+        <p class="subtitle">Cole sua URL longa para gerar um link curto e amigável.</p>
+
+        <!-- Formulário de Encurtamento -->
+        <form id="urlForm" class="form-group">
+            <input 
+                type="url" 
+                id="longUrl" 
+                placeholder="https://exemplo.com" 
+                required
+            >
+            <button type="submit" id="btnShorten">Encurtar</button>
+        </form>
+
+        <!-- Caixa de Resultado -->
+        <div id="resultBox" class="result-box hidden">
+            <div class="result-content">
+                <span id="shortUrlText">https://encurt.ar</span>
+                <button id="btnCopy" class="btn-copy">Copiar</button>
+            </div>
+            <span id="toastFeedback" class="toast hidden">Copiado!</span>
+        </div>
+
+        <!-- Seção de Histórico -->
+        <section class="history-section">
+            <h3>Seus links recentes</h3>
+            <ul id="historyList" class="history-list">
+                <!-- Inserido dinamicamente via JS -->
+            </ul>
+        </section>
+    </main>
+
+    <script src="js/index.js"></script>
 </body>
 </html>
