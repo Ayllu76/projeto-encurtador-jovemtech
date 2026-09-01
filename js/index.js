@@ -1,15 +1,19 @@
-document.getElementById('urlForm').addEventListener('submit', function(e) {
+// INDICAÇÃO: Cole aqui a URL gerada pelo Cloudflare Workers (ex: https://workers.dev)
+const URL_BASE_API = 'https://projeto-encurtador-de-links.pages.dev/'; 
+
+document.getElementById('urlForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const longUrlInput = document.getElementById('longUrl');
     let longUrl = longUrlInput.value.trim();
+    const btnShorten = document.getElementById('btnShorten');
 
-    // Se o usuário não colocar http:// ou https://, adicionamos o https:// automaticamente
+    // 1. Garante que a URL comece com http:// ou https:// exigido pelo seu back-end
     if (!/^https?:\/\//i.test(longUrl)) {
         longUrl = 'https://' + longUrl;
     }
 
-    // Testa se a URL é válida de verdade usando a API do navegador
+    // Validação nativa do navegador
     try {
         new URL(longUrl);
     } catch (_) {
@@ -17,24 +21,54 @@ document.getElementById('urlForm').addEventListener('submit', function(e) {
         return;
     }
 
-    // Simulação de geração do link curto
-    const uniqueId = Math.random().toString(36).substring(2, 7);
-    const shortUrl = `https://pvt.li{uniqueId}`;
+    // Feedback visual de carregamento
+    btnShorten.innerText = 'Encurtando...';
+    btnShorten.disabled = true;
 
-    // Exibe o resultado na tela
-    const resultBox = document.getElementById('resultBox');
-    const shortUrlText = document.getElementById('shortUrlText');
-    
-    shortUrlText.innerText = shortUrl;
-    resultBox.classList.remove('hidden');
+    try {
+        // 2. Faz a chamada POST exatamente como a ROTA 1 do seu back-end exige
+        const response = await fetch(`${URL_BASE_API}/encurtar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                urlLonga: longUrl // Seu back-end espera exatamente a chave 'urlLonga'
+            })
+        });
 
-    // Salva no histórico local
-    salvarNoHistorico(longUrl, shortUrl);
+        const data = await response.json();
 
-    // Limpa o campo de entrada
-    longUrlInput.value = '';
+        // Tratamento caso o seu Worker devolva alguma mensagem de erro tratada
+        if (!response.ok || data.erro) {
+            throw new Error(data.erro || 'Erro no servidor');
+        }
+
+        // 3. Captura o link gerado pelo seu Worker (propriedade 'linkCurto')
+        const shortUrl = data.linkCurto;
+
+        // 4. Renderiza o resultado real em tela
+        const resultBox = document.getElementById('resultBox');
+        const shortUrlText = document.getElementById('shortUrlText');
+        
+        shortUrlText.innerText = shortUrl;
+        resultBox.classList.remove('hidden');
+
+        // 5. Salva no histórico do navegador
+        salvarNoHistorico(longUrl, shortUrl);
+
+    } catch (error) {
+        console.error(error);
+        alert(error.message || 'Ocorreu um erro ao conectar com o seu Worker.');
+    } finally {
+        // Restaura os campos do formulário
+        btnShorten.innerText = 'Encurtar';
+        btnShorten.disabled = false;
+        longUrlInput.value = '';
+    }
 });
 
+// Lógica para o botão de copiar texto
 document.getElementById('btnCopy').addEventListener('click', function() {
     const textToCopy = document.getElementById('shortUrlText').innerText;
     
@@ -47,6 +81,7 @@ document.getElementById('btnCopy').addEventListener('click', function() {
     });
 });
 
+// Funções para gerenciar o histórico via LocalStorage
 function salvarNoHistorico(long, short) {
     let historico = JSON.parse(localStorage.getItem('linksEncurtados')) || [];
     historico.unshift({ long, short });
@@ -72,11 +107,12 @@ function renderizarHistorico() {
         const li = document.createElement('li');
         li.className = 'history-item';
         li.innerHTML = `
-            <a href="${item.long}" target="_blank" title="${item.long}">${item.long}</a>
-            <span>${item.short}</span>
+            <a href="${item.long}" target="_blank" class="long-link" title="${item.long}">${item.long}</a>
+            <a href="${item.short}" target="_blank" class="short-link">${item.short}</a>
         `;
         historyList.appendChild(li);
     });
 }
 
 window.onload = renderizarHistorico;
+
